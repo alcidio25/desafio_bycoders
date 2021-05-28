@@ -4,34 +4,78 @@
 
 var lineReader = require('line-reader');
 
-module.exports.uploadArquivo = (aplicacao, req, res) => {
+exports.cnabModel = aplicacao => {
+    const conexao = aplicacao.config.database();
+    const cnab = new aplicacao.app.models.CNAB(conexao);
+    return {conexao, cnab};
+}
+
+module.exports.uploadArquivo = async (aplicacao, req, res) => {
     if(req.files){
         if(this.validarArquivo(req.files.cnab, res)){
             const cnab = this.upload(req.files.cnab, res)
-            this.converterCNAB(cnab);
+            dados = await this.converterCNAB(cnab);
+            let i = 0;
+            while(i < dados.length){
+                await this.inserirCNAB(dados[i], aplicacao, res);
+                i++;
+            }
+            res.render('../views/index', {msg: 'Arquivo adicionado com sucesso'});
         }
     }else{
         res.render('../views/index', {msg: 'Selecione um arquivo'});
     }
 }
 
+exports.inserirCNAB = (dados, aplicacao, res) => {
+    return new Promise((resolve, reject) => {
+        dados.data = this.formatarData(dados.data);
+        dados.hora = this.formatarHora(dados.hora);
+        const model = this.cnabModel(aplicacao);
+        model.cnab.adicionarCNAB(dados, (error, result) => {
+            if(error){
+                return res.send(error)
+            }
+            model.conexao.end();
+            resolve(true);
+        });
+    })
+}
+
+exports.formatarHora = horario => {
+    hora = horario.slice(0, 2);
+    minuto = horario.slice(2, 4);
+    segundo = horario.slice(4, 6);
+    return hora + ':' + minuto + ':' + segundo;
+}
+
+exports.formatarData = data => {
+    ano = data.slice(0, 4);
+    mes = data.slice(4,6);
+    dia = data.slice(6,8);
+    return ano + '-' + mes + '-' + dia;
+}
+
 exports.converterCNAB = cnab => {
-    let dados = [];
-    lineReader.eachLine(cnab, function(line, last) {
-        linha = {};
-        linha.tipo = line.slice(0,1);
-        linha.data = line.slice(2,9);
-        linha.valor = line.slice(10,19);
-        linha.cpf = line.slice(20,30);
-        linha.cartao = line.slice(31,42);
-        linha.hora = line.slice(43,48);
-        linha.dono = line.slice(49,62);
-        linha.nome = line.slice(63,81);
-        dados.push(linha);
-        if (last) {
-            return false;
-        }
-    });
+    return new Promise((resolve, reject) => {
+        let dados = [];
+        lineReader.eachLine(cnab, function(line, last) {
+            linha = {};
+            linha.tipo = line.slice(0,1);
+            linha.data = line.slice(1,9);
+            linha.valor = line.slice(9,19);
+            linha.cpf = line.slice(19,30);
+            linha.cartao = line.slice(30,42);
+            linha.hora = line.slice(42,48);
+            linha.dono = line.slice(48,62);
+            linha.nome = line.slice(62,81);
+            dados.push(linha)
+            if (last) {
+                resolve(dados)
+                return false;
+            }
+        });
+    })
 }
 
 exports.upload = (cnab, res) => {
@@ -41,8 +85,6 @@ exports.upload = (cnab, res) => {
     arquivo.mv(nome_arquivo, err => {
         if(err){
             res.render('../views/index', {msg: 'Ocorreu um erro ao carregar arquivo'});
-        }else{
-            res.render('../views/index', {msg: 'Arquivo carregado com sucesso'});
         }
     });
     return nome_arquivo;
