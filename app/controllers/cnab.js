@@ -46,22 +46,36 @@ module.exports.obterOperacoes = (aplicacao, req, res) => {
             return res.send('Ocorreu um erro');
         }
         result = this.formatarTransacoes(result);
+        operacoes = this.calcularSaldoTotal(result);
         model.conexao.end();
-        res.render('../views/loja', {operacoes: result});
+        res.render('../views/loja', {operacoes});
     });
 };
 
+exports.calcularSaldoTotal = operacao => {
+    operacao.saldo = 0
+    for(let i = 0; i < operacao.length; i++){
+        if(operacao[i].tipo === 2 || operacao[i].tipo === 3 || operacao[i].tipo === 9){
+            operacao.saldo -= operacao[i].valor;
+        }else{
+            operacao.saldo += operacao[i].valor;
+        }
+    }
+    return operacao;
+}
+
 exports.formatarTransacoes = transacoes => {
     for(let i = 0; i < transacoes.length; i++){
-        transacoes[i].tipo = this.definirTransacao(transacoes[i].tipo);
+        transacoes[i].operacao = this.definirTransacao(transacoes[i]).operacao;
     }
     return transacoes;
 }
 
-exports.definirTransacao = tipo => {
+exports.definirTransacao = transacao => {
     let operacao = '';
-    console.log(tipo);
-    switch (Number.parseInt(tipo)){
+    let valor = Number.parseFloat(transacao.valor);
+    console.log(valor)
+    switch (Number.parseInt(transacao.tipo)){
         case 1:
             operacao = 'Debito';
             break;
@@ -76,7 +90,6 @@ exports.definirTransacao = tipo => {
             break;
         case 5:
             operacao = 'Recebimento Empréstimo';
-            console.log('Operacao', operacao)
             break;
         case 6:
             operacao = 'Vendas';
@@ -91,7 +104,8 @@ exports.definirTransacao = tipo => {
             operacao = 'Aluguel';
             break;
     }
-    return operacao;
+    operacao.operacao = operacao;
+    return {operacao, valor};
 }
 
 exports.inserirCNAB = (dados, aplicacao, res) => {

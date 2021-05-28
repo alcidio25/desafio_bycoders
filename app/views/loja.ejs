@@ -21,6 +21,7 @@
                 <th>Loja</th>
                 <th>Proprietário</th>
                 <th>Operação</th>
+                <th>Tipo</th>
                 <th>Data</th>
                 <th>Hora</th>
                 <th>Valor</th>
@@ -28,19 +29,25 @@
                 <th>Cartão</th>
             </thead>
             <tbody>
-                <% for(let i = 0; i < operacoes.length; i++){ %>
+                <%  for(let i = 0; i < operacoes.length; i++){ 
+                        const data = new Date(operacoes[i].data);;
+                    %>
                     <tr>
                         <td><%= operacoes[i].id_cnab %></td>
                         <td><%= operacoes[i].nome %></td>
                         <td><%= operacoes[i].dono %></td>
+                        <td><%= operacoes[i].operacao %></td>
                         <td><%= operacoes[i].tipo %></td>
-                        <td><%= operacoes[i].data %></td>
+                        <td><%= data.toLocaleDateString() %></td>
                         <td><%= operacoes[i].hora %></td>
                         <td><%= operacoes[i].valor %></td>
                         <td><%= operacoes[i].cpf %></td>
                         <td><%= operacoes[i].cartao %></td>
                     </tr>
                 <% } %>
+                <tr>
+                    <td colspan="8">Saldo total: <%= operacoes.saldo %></td>
+                </tr>
             </tbody>
         </table>
     </main>
