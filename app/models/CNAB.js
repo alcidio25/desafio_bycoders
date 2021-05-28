@@ -20,6 +20,16 @@ class CNAB{
             dados.nome
         ], callback);
     };
+    
+    obterLojas(dados, callback){
+        const sql = 'select cnab.id_cnab, cnab.nome from cnab group by cnab.nome';
+        this._conexao.query(sql, callback);
+    }
+    
+    obterOperacoes(loja, callback){
+        const sql = 'SELECT * FROM `cnab` WHERE cnab.nome = ?';
+        this._conexao.query(sql, [loja], callback);
+    }
 }
 
 module.exports = () => CNAB;

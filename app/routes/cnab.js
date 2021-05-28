@@ -10,5 +10,13 @@ module.exports = aplicacao => {
     
     aplicacao.post('/', (req, res) => {
         aplicacao.app.controllers.cnab.uploadArquivo(aplicacao, req, res);
-    })
+    });
+    
+    aplicacao.get('/lojas', (req, res) => {
+        aplicacao.app.controllers.cnab.obterLojas(aplicacao, req, res);
+    });
+    
+    aplicacao.get('/loja', (req, res) => {
+        aplicacao.app.controllers.cnab.obterOperacoes(aplicacao, req, res);
+    });
 }

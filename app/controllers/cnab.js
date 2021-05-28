@@ -20,11 +20,78 @@ module.exports.uploadArquivo = async (aplicacao, req, res) => {
                 await this.inserirCNAB(dados[i], aplicacao, res);
                 i++;
             }
-            res.render('../views/index', {msg: 'Arquivo adicionado com sucesso'});
+            res.redirect('/lojas');
         }
     }else{
         res.render('../views/index', {msg: 'Selecione um arquivo'});
     }
+}
+
+module.exports.obterLojas = (aplicacao, req, res) => {
+    const model = this.cnabModel(aplicacao);
+    model.cnab.obterLojas(null, (error, result) => {
+        if(error){
+            return res.send('Ocorreu um erro');
+        }
+        res.render('../views/lojas', {lojas: result});
+    });
+    model.conexao.end();
+}
+
+module.exports.obterOperacoes = (aplicacao, req, res) => {
+    const model = this.cnabModel(aplicacao);
+    const loja = req.query.id;
+    model.cnab.obterOperacoes(loja, (error, result) => {
+        if(error){
+            return res.send('Ocorreu um erro');
+        }
+        result = this.formatarTransacoes(result);
+        model.conexao.end();
+        res.render('../views/loja', {operacoes: result});
+    });
+};
+
+exports.formatarTransacoes = transacoes => {
+    for(let i = 0; i < transacoes.length; i++){
+        transacoes[i].tipo = this.definirTransacao(transacoes[i].tipo);
+    }
+    return transacoes;
+}
+
+exports.definirTransacao = tipo => {
+    let operacao = '';
+    console.log(tipo);
+    switch (Number.parseInt(tipo)){
+        case 1:
+            operacao = 'Debito';
+            break;
+        case 2:
+            operacao = 'Boleto';
+            break;
+        case 3:
+            operacao = 'Financiamento';
+            break;
+        case 4:
+            operacao = 'Crédito';
+            break;
+        case 5:
+            operacao = 'Recebimento Empréstimo';
+            console.log('Operacao', operacao)
+            break;
+        case 6:
+            operacao = 'Vendas';
+            break;
+        case 7:
+            operacao = 'Recebimento TED';
+            break;
+        case 8:
+            operacao = 'Recebimento DOC';
+            break;
+        case 9:
+            operacao = 'Aluguel';
+            break;
+    }
+    return operacao;
 }
 
 exports.inserirCNAB = (dados, aplicacao, res) => {
@@ -59,7 +126,7 @@ exports.formatarData = data => {
 exports.converterCNAB = cnab => {
     return new Promise((resolve, reject) => {
         let dados = [];
-        lineReader.eachLine(cnab, function(line, last) {
+        lineReader.eachLine(cnab, {encoding: 'utf8'}, (line, last) => {
             linha = {};
             linha.tipo = line.slice(0,1);
             linha.data = line.slice(1,9);

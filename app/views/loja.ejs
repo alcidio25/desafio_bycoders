@@ -1,0 +1,49 @@
+<!doctype html>
+
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+
+  <title>CNAB</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="Alcidio Lucas">
+
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+
+</head>
+
+<body>
+    
+    <main>
+        <table>
+            <thead>
+                <th>#</th>
+                <th>Loja</th>
+                <th>Proprietário</th>
+                <th>Operação</th>
+                <th>Data</th>
+                <th>Hora</th>
+                <th>Valor</th>
+                <th>CPF</th>
+                <th>Cartão</th>
+            </thead>
+            <tbody>
+                <% for(let i = 0; i < operacoes.length; i++){ %>
+                    <tr>
+                        <td><%= operacoes[i].id_cnab %></td>
+                        <td><%= operacoes[i].nome %></td>
+                        <td><%= operacoes[i].dono %></td>
+                        <td><%= operacoes[i].tipo %></td>
+                        <td><%= operacoes[i].data %></td>
+                        <td><%= operacoes[i].hora %></td>
+                        <td><%= operacoes[i].valor %></td>
+                        <td><%= operacoes[i].cpf %></td>
+                        <td><%= operacoes[i].cartao %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </main>
+  
+</body>
+</html>
