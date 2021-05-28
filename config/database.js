@@ -9,7 +9,7 @@ const conexao = () => {
         host: 'localhost',
         user: 'root',
         password: '',
-        database: 'smqd'
+        database: 'dados'
     });
 };
 

@@ -2,13 +2,15 @@
 * Criado por Alcidio Lucas - 29/05/2021
 */
 
-const express = require('express')
-      consign = require('consign')
-      upload  = require('express-fileupload')
+const express    = require('express')
+      consign    = require('consign')
+      upload     = require('express-fileupload')
+      bodyParser = require('body-parser');
       
 
 const app = express();
-app.use(upload())
+app.use(upload());
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.set('view engine', 'ejs');
 app.set('views', './app/views');
