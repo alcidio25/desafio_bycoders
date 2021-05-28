@@ -1,0 +1,30 @@
+<!doctype html>
+
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+
+  <title>CNAB</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="Alcidio Lucas">
+
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+
+</head>
+
+<body>
+    
+    <main>
+        <% if(msg !== ''){ %>
+            <p><%= msg %></p>
+        <% } %>
+        <form method="post" action="/" enctype="multipart/form-data">
+            <label for="tCnab">Selecione o ficheiro CNAB</label>
+            <input type="file" name="cnab" id="tCnab" />
+            
+            <input type="submit" value="Enviar" />
+        </form>
+    </main>
+  
+</body>
+</html>
