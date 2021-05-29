@@ -16,6 +16,7 @@ app.set('view engine', 'ejs');
 app.set('views', './app/views');
 
 app.use(express.static('./app/files'));
+app.use(express.static('./assets/css'));
 
 consign().include('./app/routes')
          .then('./config/database.js')
