@@ -66,15 +66,13 @@ exports.calcularSaldoTotal = operacao => {
 
 exports.formatarTransacoes = transacoes => {
     for(let i = 0; i < transacoes.length; i++){
-        transacoes[i].operacao = this.definirTransacao(transacoes[i]).operacao;
+        transacoes[i].operacao = this.definirTransacao(transacoes[i]);
     }
     return transacoes;
 }
 
 exports.definirTransacao = transacao => {
     let operacao = '';
-    let valor = Number.parseFloat(transacao.valor);
-    console.log(valor)
     switch (Number.parseInt(transacao.tipo)){
         case 1:
             operacao = 'Debito';
@@ -104,8 +102,7 @@ exports.definirTransacao = transacao => {
             operacao = 'Aluguel';
             break;
     }
-    operacao.operacao = operacao;
-    return {operacao, valor};
+    return operacao;
 }
 
 exports.inserirCNAB = (dados, aplicacao, res) => {
@@ -142,21 +139,35 @@ exports.converterCNAB = cnab => {
         let dados = [];
         lineReader.eachLine(cnab, {encoding: 'utf8'}, (line, last) => {
             linha = {};
-            linha.tipo = line.slice(0,1);
-            linha.data = line.slice(1,9);
-            linha.valor = line.slice(9,19);
-            linha.cpf = line.slice(19,30);
-            linha.cartao = line.slice(30,42);
-            linha.hora = line.slice(42,48);
-            linha.dono = line.slice(48,62);
-            linha.nome = line.slice(62,81);
-            dados.push(linha)
+            linha.tipo = line.slice(0, 1);
+            linha.data = line.slice(1, 9);
+            linha.valor = line.slice(9, 19);
+            linha.cpf = line.slice(19, 30);
+            linha.cartao = line.slice(30, 42);
+            linha.hora = line.slice(42, 48);
+            linha.dono = line.slice(48, 62);
+            linha.nome = line.slice(62, 82);
+            if(this.validarCNAB(linha)){
+                linha.valor = linha.valor / 100.00;
+                dados.push(linha);
+            }
             if (last) {
                 resolve(dados)
                 return false;
             }
         });
     })
+}
+
+exports.validarCNAB = linha => {
+    let retorno = false;
+    if(linha.tipo.length === 1 && linha.data.length === 8 && linha.valor.length === 10
+        && linha.cartao.length === 12 && linha.cpf.length === 11 && linha.hora.length === 6 
+        && linha.dono.length === 14 && linha.nome.length === 19)
+    {
+        retorno = true;
+    }
+    return retorno;
 }
 
 exports.upload = (cnab, res) => {
