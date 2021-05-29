@@ -35,7 +35,7 @@ $ node index.js
 
 # O servidor inciará na porta:3600 - acesse <http://localhost:3600>
 
-# Crie uma de nome dados
+# Crie uma base de dados MySQL
 
 # importe o arquivo dados.sql presente na pasta do projecto
 ```
