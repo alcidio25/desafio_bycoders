@@ -27,6 +27,22 @@ describe("Testes", () => {
        expect('16:35:55').toEqual(expect.stringContaining(data));
     });
     
+    it("Deve retornar true após a validação do tamanho de cada atributo", () => {
+        objecto = {
+               tipo: '4',
+               data: '20190601',
+               valor: "0000050617",
+               cpf: '84515254073',
+               cartao: '1234****2231',
+               hora: '100000',
+               dono: 'MARCOS PEREIRA',
+               nome: 'MERCADO DA AVENIDA '
+         }
+        console.log(cnab.validarCNAB(objecto))
+       expect(cnab.validarCNAB(objecto)).toBeTruthy();
+    });
+      
+    
     it("Deve retornar uma objecto com os dados do CNAB após a conversão o arquivo", async () => {
         cnabfile = './app/files/teste.txt';
         const valor = await cnab.converterCNAB(cnabfile);
