@@ -9,8 +9,15 @@
   <meta name="author" content="Alcidio Lucas">
 
   <style>
-    #main{
-        min-height: 100vh;
+      
+      nav{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      #main{
+        min-height: 60vh;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -25,20 +32,47 @@
          font-size: 14;
          padding: 10px 0;
       }
+      
+      .menu{
+          display: inline-block;
+          padding: 10px 20px;
+      }
+      
+      span{
+          display: inline-block;
+          padding-right: 20px;
+          min-width: 200px !important;
+      }
   </style>
 
 </head>
 
 <body>
     
+    <header>
+        <nav>
+            <ul>
+                <li class="menu">
+                    <a href="/home">Home</a>
+                </li>
+                <li class="menu">
+                    <a href="/lojas">Lojas</a>
+                </li>
+                <li class="menu">
+                    <a href="/sair">Sair</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    
     <section id="main">
         <ul>
             <% if(lojas.length < 1){ %>
-                <p>Certifique-se de que todos os dados do ficheiro são válidos</p>
-                <a href="/">Tente de novo</a>
+                <p>Não foram encontrados quaisquer dados</p>
+                <a href="/home">Carregue um ficheiro CNAB</a>
             <% }else{ %>
                 <% for(let i = 0; i < lojas.length; i++){ %>
-                    <li><a href="/loja?id=<%= lojas[i].nome %>"><%= lojas[i].nome %></a></li>
+                    <li><span><%= lojas[i].nome %></span> <a href="/loja?id=<%= lojas[i].nome %>">Ver transações</a></li>
                 <% } 
             }%>
         </ul>

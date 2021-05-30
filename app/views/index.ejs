@@ -9,8 +9,19 @@
   <meta name="author" content="Alcidio Lucas">
 
   <style>
+      nav{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      li{
+          display: inline-block;
+          padding: 10px 20px;
+      }
+      
       #main{
-        min-height: 100vh;
+        min-height: 60vh;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -34,11 +45,27 @@
 
 <body>
     
+    <header>
+        <nav>
+            <ul>
+                <li>
+                    <a href="/home">Home</a>
+                </li>
+                <li>
+                    <a href="/lojas">Lojas</a>
+                </li>
+                <li>
+                    <a href="/sair">Sair</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    
     <section id="main">
         <% if(msg !== ''){ %>
             <p><%= msg %></p>
         <% } %>
-        <form method="post" action="/" enctype="multipart/form-data">
+        <form method="post" action="/home" enctype="multipart/form-data">
             <label for="tCnab">Selecione o ficheiro CNAB</label>
             <input type="file" name="cnab" id="tCnab" /><br>
             <input class="enviar" type="submit" value="Enviar" />
