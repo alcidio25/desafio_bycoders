@@ -6,6 +6,7 @@
 - [x] Importação e conversão de ficheiro txt com dados CNAB
 - [x] Validação e apresentação dos dados financeiros
 - [x] Armazenamento permanente dos dados
+- [x] Autenticação OAuth 
 
 ### 🛠 Tecnologias
 
@@ -43,7 +44,8 @@ $ node index.js
 ### Funcionamento
 
 ```bash
-# Faça o upload do ficheiro cnab.txt presente na pasta do projecto
+# Faça a autenticação com uma conta Google
+# Faça o upload do ficheiro cnab.txt presente na pasta do projecto para importar os dados CNAB
 # Navegue entre os dados apresentados
 ```
 
